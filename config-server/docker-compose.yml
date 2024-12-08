@@ -1,0 +1,23 @@
+services:
+  config-server:
+    container_name: config-server
+    image: tobyawo/config-server
+    build: ./
+    restart: on-failure
+    ports:
+      - "8888:8888"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    logging:
+      driver: "fluentd"
+      options:
+        fluentd-address: "localhost:24224"    # Replace with Fluentd service hostname if different
+        tag: "config-server"              # Optional: adds a tag to help identify logs in Fluentd output
+
+
+networks:
+  default:
+    external:
+      name: gm-services-docker-network
+#Network: Make sure the network gm-services-docker-network is created and available:
+#docker network create g4m-services-docker-network

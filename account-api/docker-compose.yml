@@ -1,0 +1,33 @@
+services:
+  account-api:
+    container_name: account-api
+    image: tobyawo/account-api
+    build: ./
+    restart: on-failure
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_CLOUD_CONFIG_URI=http://config-server:8888/config-server
+      - spring.config.import=optional:configserver:http://config-server:8888/config-server
+    ports:
+      - "4002:4002"
+    logging:
+      driver: "fluentd"
+      options:
+        fluentd-address: "localhost:24224"    # Replace with Fluentd service hostname if different
+        tag: "config-server"              # Optional: adds a tag to help identify logs in Fluentd output
+    depends_on:
+      - mongodb
+
+  mongodb:
+    image: mongodb/mongodb-community-server:6.0-ubi8
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=password
+
+
+networks:
+  default:
+    external:
+      name: gm-services-docker-network
+#Network: Make sure the network gm-services-docker-network is created and available:
+#docker network create g4m-services-docker-network

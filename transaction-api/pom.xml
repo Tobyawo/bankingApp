@@ -55,4 +55,8 @@
             <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
     </dependencies>
+
+    <build>
+        <finalName>transaction-api</finalName>
+    </build>
 </project>

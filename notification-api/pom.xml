@@ -35,4 +35,8 @@
 			<artifactId>spring-cloud-starter-config</artifactId>
 		</dependency>
 	</dependencies>
+
+	<build>
+		<finalName>notification-api</finalName>
+	</build>
 </project>

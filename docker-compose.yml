@@ -23,9 +23,9 @@ services:
       - ./data/account-api-mongo:/data/mongo
 
   api-gateway:
-    image: 0145136798/api-gateway
+    image: tobyawo/api-gateway
     container_name: api-gateway
-    pull_policy: always
+#    pull_policy: always
     ports:
       - "8080:8080"
     expose:
@@ -34,13 +34,13 @@ services:
       spring.profiles.active: docker
       LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_SECURITY: TRACE
       spring.cloud.config.uri: http://config-server:8888/config-server
-    depends_on:
-      - discovery-server
+#    depends_on:
+#      - discovery-server
     restart: on-failure
 
   asset-management-api:
     container_name: asset-management-api
-    image: 0145136798/asset-management-api
+    image: tobyawo/asset-management-api
     pull_policy: always
     environment:
       spring.profiles.active: docker
@@ -68,8 +68,8 @@ services:
 
   config-server:
     container_name: config-server
-    image: 0145136798/config-server
-    pull_policy: always
+    image: tobyawo/config-server
+#    pull_policy: always
     ports:
       - "8888:8888"
     expose:
@@ -82,9 +82,9 @@ services:
       - zipkin
 
   discovery-server:
-    image: 0145136798/discovery-server
+    image: tobyawo/discovery-server
     container_name: discovery-server
-    pull_policy: always
+#    pull_policy: always
     ports:
       - "8761:8761"
     expose:
@@ -112,8 +112,8 @@ services:
 
   notification-api:
     container_name: notification-api
-    image: 0145136798/notification-api
-    pull_policy: always
+    image: tobyawo/notification-api
+#    pull_policy: always
     environment:
       spring.profiles.active: docker
       spring.cloud.config.uri: http://config-server:8888/config-server
@@ -165,7 +165,7 @@ services:
 
   transaction-api:
     container_name: transaction-api
-    image: 0145136798/transaction-api
+    image: tobyawo/transaction-api
     pull_policy: always
     environment:
       spring.profiles.active: docker
@@ -195,3 +195,8 @@ services:
     container_name: zipkin
     ports:
       - "9411:9411"
+
+networks:
+  default:
+    external:
+      name: gm-services-docker-network

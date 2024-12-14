@@ -9,11 +9,12 @@ services:
     environment:
       - SPRING_PROFILES_ACTIVE=docker
     logging:
-      driver: "fluentd"
+      driver: "gelf"
       options:
-        fluentd-address: "localhost:24224"    # Replace with Fluentd service hostname if different
-        tag: "config-server"              # Optional: adds a tag to help identify logs in Fluentd output
-
+        gelf-address: "udp://localhost:5044"  # Replace `logstash` with the actual hostname of your Logstash container
+        tag: "config-server"                # Optional: adds a tag to help identify logs in Fluentd output
+    networks:
+      - default
 
 networks:
   default:

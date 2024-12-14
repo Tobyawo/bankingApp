@@ -11,10 +11,12 @@ services:
     ports:
       - "8761:8761"
     logging:
-      driver: "fluentd"
+      driver: "gelf"
       options:
-        fluentd-address: "localhost:24224"    # Replace with Fluentd service hostname if different
-        tag: "discovery-server"              # Optional: adds a tag to help identify logs in Fluentd output
+        gelf-address: "udp://localhost:5044"  # Replace `logstash` with the actual hostname of your Logstash container
+        tag: "discovery-server"                # Optional: adds a tag to help identify logs in Fluentd output
+    networks:
+      - default            # Optional: adds a tag to help identify logs in Fluentd output
 
 
 networks:

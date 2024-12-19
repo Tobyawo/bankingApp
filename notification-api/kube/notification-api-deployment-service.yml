@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: notification-api-service
+spec:
+  type: ClusterIP  # Change from ClusterIP to NodePort
+  selector:
+    app: notification-api-service
+  ports:
+    - protocol: TCP
+      port: 8099         # The service port inside the cluster
+      targetPort: 8099    # The port inside the container
+#      nodePort: 30002      # The port exposed on each node for external access

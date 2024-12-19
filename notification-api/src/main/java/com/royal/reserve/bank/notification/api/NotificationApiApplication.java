@@ -22,7 +22,7 @@ public class NotificationApiApplication {
 	 *It handles incoming messages and processes the TransactionEvent object.
 	 *@param transactionEvent The TransactionEvent object received from the Kafka message.
 	 */
-	@KafkaListener(topics = "notificationTopic")
+	@KafkaListener(topics = "notificationTopic", groupId = "notificationId")
 	public void handleNotification(TransactionEvent transactionEvent) {
 		log.info("Received notification for transaction: {}", transactionEvent.getTransactionId());
 	}

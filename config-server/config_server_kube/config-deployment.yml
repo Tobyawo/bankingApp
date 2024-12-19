@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: config-deployment
+  labels:
+    app: config-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: config-server
+  template:
+    metadata:
+      labels:
+        app: config-server
+    spec:
+      containers:
+        - name: config-server
+          image: tobyawo/config-server:latest
+          ports:
+            - containerPort: 8888
+          volumeMounts:
+            - name: log-volume
+              mountPath: /var/log/config-server  # Adjust the log path as needed
+
+        - name: fluentd-config
+          image: fluentd  # Use the Fluentd image
+          ports:
+            - containerPort: 24225  # Fluentd port
+          volumeMounts:
+            - name: log-volume
+              mountPath: /var/log/config-server  # Mount the same log directory to read logs
+            - name: fluentd-config-server
+              mountPath: /fluentd/etc  # Mount ConfigMap as a directory
+          resources:
+            limits:
+              memory: "200Mi"
+              cpu: "100m"
+          command: ["fluentd", "-c", "/fluentd/etc/fluent.conf"]
+
+      volumes:
+        - name: log-volume
+          emptyDir: {}  # Use emptyDir for shared log storage
+        - name: fluentd-config-server
+          configMap:
+            name: fluentd-config-server  # Reference to the ConfigMap for Fluentd configuration

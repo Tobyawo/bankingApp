@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: notification-api-deployment
+  labels:
+    app: notification-api-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: notification-api-service
+  template:
+    metadata:
+      labels:
+        app: notification-api-service
+    spec:
+      containers:
+        # Main Application Container
+        - name: notification-api
+          image: tobyawo/notification-api
+          ports:
+            - containerPort: 8099
+          volumeMounts:
+            - name: log-volume
+              mountPath: /var/log/notification-api  # Path where logs are written by the application
+
+        # Fluentd Sidecar Container
+        - name: fluentd-sidecar
+          image: fluentd
+          ports:
+            - containerPort: 24224  # Fluentd listening port for forwarding logs
+          volumeMounts:
+            - name: log-volume
+              mountPath: /var/log/notification-api  # Shared volume for reading logs
+            - name: fluentd-config
+              mountPath: /fluentd/etc  # Fluentd configuration directory
+          command: ["fluentd", "-c", "/fluentd/etc/fluent.conf"]
+          resources:
+            limits:
+              memory: "200Mi"
+              cpu: "100m"
+
+      # Volumes for Shared Log Storage and ConfigMap
+      volumes:
+        - name: log-volume
+          emptyDir: {}  # Shared volume for logs between containers
+        - name: fluentd-config
+          configMap:
+            name: fluentd-notification-api-config  # ConfigMap containing Fluentd configuration

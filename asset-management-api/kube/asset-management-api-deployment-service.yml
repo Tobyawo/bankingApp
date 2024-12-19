@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: asset-management-api-service
+spec:
+  type: NodePort  # Change from ClusterIP to NodePort
+  selector:
+    app: asset-management-api-service
+  ports:
+    - protocol: TCP
+      port: 4001         # The service port inside the cluster
+      targetPort: 4001    # The port inside the container
+      nodePort: 30099     # The port exposed on each node for external access

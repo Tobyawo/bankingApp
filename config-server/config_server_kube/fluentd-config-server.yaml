@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fluentd-config-server
+data:
+  fluent.conf: |
+    <source>
+      @type tail
+      path /var/log/config-server/*.log
+      pos_file /fluentd/log/config-server.pos
+      tag gm-config-server.log
+      <parse>
+        @type none
+      </parse>
+    </source>
+
+    <match config-server.log>
+      @type stdout  # Replace this with your preferred output plugin
+      @log_level info
+    </match>
+
+#Create this config on node using
+#  kubectl apply -f fluentd-config-server.yaml

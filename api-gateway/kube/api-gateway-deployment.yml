@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-gateway-deployment
+  labels:
+    app: api-gateway-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: api-gateway-service
+  template:
+    metadata:
+      labels:
+        app: api-gateway-service
+    spec:
+      containers:
+        # Main Application Container
+        - name: api-gateway
+          image: tobyawo/api-gateway
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - name: log-volume
+              mountPath: /var/log/api-gateway  # Path where logs are written by the application
+
+        # Fluentd Sidecar Container
+        - name: fluentd-sidecar
+          image: fluentd
+          ports:
+            - containerPort: 24224  # Fluentd listening port for forwarding logs
+          volumeMounts:
+            - name: log-volume
+              mountPath: /var/log/api-gateway  # Shared volume for reading logs
+            - name: fluentd-config
+              mountPath: /fluentd/etc  # Fluentd configuration directory
+          command: ["fluentd", "-c", "/fluentd/etc/fluent.conf"]
+          resources:
+            limits:
+              memory: "200Mi"
+              cpu: "100m"
+
+      # Volumes for Shared Log Storage and ConfigMap
+      volumes:
+        - name: log-volume
+          emptyDir: {}  # Shared volume for logs between containers
+        - name: fluentd-config
+          configMap:
+            name: fluentd-api-gateway-config  # ConfigMap containing Fluentd configuration

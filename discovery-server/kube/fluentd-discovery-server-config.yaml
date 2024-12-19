@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fluentd-discovery-server-config
+data:
+  fluent.conf: |
+    <source>
+      @type tail
+      path /var/log/discovery-server/*.log  # Read logs from application log directory
+      pos_file /var/log/discovery-server/fluentd.pos
+      tag discovery-server.log
+      format json
+    </source>
+
+    <filter discovery-server.log>
+      @type grep
+      <regexp>
+        key level
+        pattern ^(ERROR|WARN)$  # Filter logs with ERROR or WARN levels
+      </regexp>
+    </filter>
+
+    <match discovery-server.log>
+      @type forward
+      <server>
+        host kafka  # Hostname of Fluentd aggregator node
+        port 9092
+      </server>
+    </match>
+
+
+#Create this config on node using
+#  kubectl apply -f fluentd-gm-user-config.yaml
+#  The Fluentd sidecar reads the logs from /var/log/gm-access,
+#  filters them as needed, and forwards them to an aggregator Fluentd node or directly to Kafka.

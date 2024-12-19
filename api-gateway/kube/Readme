@@ -1,0 +1,14 @@
+Explanation of the Deployment Configuration
+Containers:
+
+gm-access: Your application container, writing logs to /var/log/gm-access.
+fluentd: The Fluentd sidecar container configured to read logs from /var/log/gm-access.
+Volumes:
+
+log-volume: An emptyDir volume that both containers share for logging.
+fluentd-config: A ConfigMap-mounted volume containing fluent.conf, Fluentd’s configuration file.
+Fluentd ConfigMap:
+
+Configures Fluentd to tail log files in /var/log/gm-access and output them.
+The @type stdout directive outputs logs to stdout for testing. Replace with the appropriate plugin to
+send logs to your preferred backend (e.g., Elasticsearch, a central Fluentd aggregator, or other services).

@@ -119,6 +119,10 @@ The Royal Reserve Bank project utilizes the following technologies and framework
 - **Spring Boot:** for simplifying the development and deployment of microservices by using pre-configured templates and tools.
 - **Spring Cloud:** for implementing microservices architectural patterns, such as service discovery, configuration management, and circuit breakers.
 - **Docker:** for containerization of microservices, making it easy to package and deploy the microservices across different environments.
+- **Helm:** for Kubernetes deployment and management.
+- **Jenkins:** for CI/CD pipeline automation.
+- **GitHub Actions:** for GitHub-native CI/CD workflows.
+- **SonarQube:** for static code analysis and quality assurance.
 - **API Gateway:** for managing and routing API requests from users to different microservices and providing a unified entry point.
 - **JPA:** for implementing the Object Relational Mapping in the microservices, allowing Java applications to interact with databases and perform CRUD.
 - **MongoDB:** for storing account data in the Account API allowing flexibility and scalability in handling large amounts of unstructured data.
@@ -218,6 +222,62 @@ To set up Grafana with Prometheus as the data source and configure a dashboard u
 - Select the Prometheus data source that you added in the previous step.
 - Review the imported dashboard and make any necessary modifications or adjustments.
 - You can now view and interact with the imported dashboard, which will display the metrics and visualizations based on the Prometheus data source.
+
+
+### CI/CD Pipeline
+### Jenkins
+
+- Code Checkout: Clones the repository from GitHub.
+
+- Build: Uses Maven to build the microservices.
+
+- Docker Image Build and Push: Builds Docker images for the microservices and pushes them to a Docker registry.
+
+- Deployment: Deploys the microservices to a Kubernetes cluster using Helm.
+
+
+### GitHub Actions
+
+The project also includes a GitHub Actions workflow for CI/CD. The workflow triggers on:
+
+- Pull requests to run tests and static code analysis.
+
+Key steps in the GitHub Actions workflow:
+
+- Checkout code.
+
+- Build and test microservices.
+
+- Perform static code analysis with SonarQube.
+
+
+
+## Kubernetes Management 🚀
+
+### Helm
+
+The project uses Helm for Kubernetes management, providing a streamlined approach to deploying and managing the application in a Kubernetes cluster. Helm charts simplify the deployment process and enable easy configuration of resources.
+
+- Chart Structure: The Helm chart includes templates for deployments, services, and ingress configurations.
+
+- Environment-specific Values: Configurations for development, staging, and production environments are managed using separate values files.
+
+- Rollbacks: Helm allows for easy rollbacks in case of deployment issues.
+
+## Code Quality and Analysis 🔧
+
+### SonarQube
+
+- SonarQube is integrated into the CI/CD pipeline to ensure high code quality and adherence to best practices. It performs:
+
+- Static Code Analysis: Identifies code smells, bugs, and security vulnerabilities.
+
+- Code Coverage: Provides metrics for unit test coverage.
+
+- Quality Gates: Enforces predefined quality thresholds to prevent merging low-quality code.
+
+- SonarQube reports are accessible through the Jenkins and GitHub Actions pipelines, enabling developers to address issues proactively.
+
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="./docs/readme-assets/grafana-dashboard-dark.png">
